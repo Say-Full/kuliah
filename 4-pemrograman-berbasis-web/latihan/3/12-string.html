@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Manipulasi string</title>
+</head>
+<body>
+    <div id="string"></div>
+
+    <script>
+        var kalimat = "M Saifullah Sani"
+        
+        document.getElementById("string").innerHTML = kalimat.length;
+        document.getElementById("string").innerHTML = kalimat.indexOf("Saiful");
+        document.getElementById("string").innerHTML = kalimat.lastIndexOf("Sani");
+        document.getElementById("string").innerHTML = kalimat.search("M");
+        document.getElementById("string").innerHTML = kalimat.slice(2, 8);
+        document.getElementById("string").innerHTML = kalimat.replace("M", "Muhammad");
+        document.getElementById("string").innerHTML = kalimat.toUpperCase();
+
+        var kata = kalimat.split(" ");
+        document.getElementById("string").innerHTML = kata[1];
+
+        var teks = "";
+        for(var i = 0; i <= 2; i++) {
+            teks += kata[i] + "<br>";
+        }
+        document.getElementById("string").innerHTML = teks;
+    </script>
+</body>
+</html>
+
+<!--
+    length, indexOf(), lastIndexOf(), search(), slice(), substring(), substr(), replace() toUpperCase(), toLowerCase(), concat(), split()
+-->

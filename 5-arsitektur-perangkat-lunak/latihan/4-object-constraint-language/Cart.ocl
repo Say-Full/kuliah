@@ -1,0 +1,19 @@
+package marketplace
+
+context Cart::checkout(): Boolean
+    init : false
+    inv  : self.products->size() >= 0
+    pre  : self.products->notEmpty()
+                and self.channel <> null
+    post : channel.pay (self.calculatePrice())
+                and result = true
+
+context Cart::calculatePrice(): float
+    init : 0
+    inv  : self.products->size() >= 0
+    pre  : self.products->notEmpty()
+    post : self.products->iterate(p: Product, sum: float = 0 
+                | sum + p.getPrice())
+                and result = sum
+
+endpackage

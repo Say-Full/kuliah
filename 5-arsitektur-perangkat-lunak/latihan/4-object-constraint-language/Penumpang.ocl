@@ -1,0 +1,16 @@
+context Penumpang::Penumpang(nama: String, umur: int, hamil:Boolean)
+    post : self.nama = nama 
+                and self.umur = umue
+                and self.hamil = hamil
+
+context Penumpang::getNama(): String
+    init : ''
+    post : result = self.nama
+
+context Penumpang::getUmur(): int
+    init : 0
+    post : result = self.umur
+
+context Penumpang::getHamil(): Boolean
+    init : false
+    post : result = self.hamil

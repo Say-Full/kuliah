@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Tipe Data</title>
+</head>
+<body>
+    <div id="number"></div>
+    <div id="string"></div>
+    <div id="array"></div>
+    <div id="object"></div>
+
+    <script>
+        var angka = 99;
+        var nama = "Saiful";
+        var hari = ["Senin", "Rabu", "Jum'at"];
+
+        var mahasiswa =
+        {
+            nama : "Saiful",
+            npm : 62
+        };
+        
+
+        document.getElementById("number").innerHTML = angka;
+        document.getElementById("string").innerHTML = nama;
+        document.getElementById("array").innerHTML = hari[2];
+        document.getElementById("object").innerHTML = "<br>Nama : " + mahasiswa.nama + "<br>NPM : " + mahasiswa.npm;
+    </script>
+</body>
+</html>

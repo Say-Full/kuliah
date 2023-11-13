@@ -1,0 +1,33 @@
+package marketplace
+
+context Gopay::Gopay()
+    post : self.balance = 0
+
+context Gopay::Gopay(balance: float)
+    post : self.balance = balance
+
+context Gopay::pay(ammount: float): Boolean
+    init : false
+    inv  : self.balance >= 0
+    pre  : self.balance >= ammount
+    post : self.withdraw(ammount)
+                and self.balance@pre - self.balance = ammount
+                and result = true
+
+context Gopay::topUp(ammount: float)
+    inv  : self.balance >= 0
+    post : self.balance - self.balance@pre = ammount
+    
+context Gopay::withdraw(ammount: float)
+    inv : self.balance >= 0
+    post : self.balance@pre - self.balance = ammount
+
+context Gopay::getBalance(): float
+    init : 0
+    post : result = self.balance
+
+context Gopay::getChannelName(): String
+    init : ''
+    post  : result = 'Gopay'
+
+endpackage

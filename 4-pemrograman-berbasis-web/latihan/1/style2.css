@@ -1,0 +1,30 @@
+.kotak {
+    padding: 50px;
+	width: 100px;
+	color: black;
+	margin: 30px;
+	background: greenyellow;	
+}
+
+.kotak2 {
+    padding: 50px;
+	width: 100px;
+	color: black;
+	margin: 30px;
+	background: green;
+}
+
+#kotak {
+    width: 100px;
+	color: #fff;
+	background: red;
+	padding: 50px;
+}
+
+#tes {
+    padding: 50px;
+	width: 100px;
+	color: black;
+	margin: 30px;
+	background: green;
+}

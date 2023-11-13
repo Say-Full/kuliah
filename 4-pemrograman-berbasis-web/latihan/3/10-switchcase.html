@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Switch Case</title>
+</head>
+<body>
+    <div id="seleksi"></div>
+
+    <script>
+        var warna = "magenta";
+
+        switch(warna) {
+            case "merah" :
+                teks = "Warna \"merah\" !";
+                break;
+            case "biru" :
+                teks = "Warna \"biru\" !";
+                break;
+            default :
+                teks = "Warna tidak terdeteksi !";
+        }
+
+        document.getElementById("seleksi").innerHTML = teks;
+    </script>
+</body>
+</html>

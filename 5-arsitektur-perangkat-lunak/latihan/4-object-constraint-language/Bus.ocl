@@ -1,0 +1,50 @@
+context Bus::getPenumpangBiasa(): Penumpang[]
+    init = null
+    post = result = self.penumpangBiasa
+
+context Bus::getPenumpangPrioritas(): Penumpang[]
+    init = null
+    post = result = self.penumpangPrioritas
+
+context Bus::getJumlahPenumpangBiasa(): int
+    init : 0
+    inv  : penumpangBiasa->size() >= 0
+            and penumpangBiasa->size() <= 4
+    pre  : penumpangBiasa <> null
+    post : result = penumpangBiasa->size()
+
+context Bus::getJumlahPenumpangPrioritas(): int
+    init : 0
+    inv  : penumpangPrioritas->size() >= 0
+            and penumpangPrioritas->size() <= 2
+    pre  : penumpangPrioritas <> null
+    post : result = penumpangPrioritas->size()
+
+context Bus::NaikPenumpang(p: Penumpang): Boolean
+    init : false
+    inv  : penumpangBiasa->size() + penumpangPrioritas->size() <= 6
+    post : if p.getUmur() > 60 or p.getUmur() < 10 or p.getHamil()  -- Cek Penumpang Prioritas?
+            then 
+                if penumpangPrioritas->size() < 2 -- Cek Slot Penumpang Prioritas
+                    then penumpangPrioritas->exist(p) and result = true
+                else if penumpangBiasa->size() < 4 -- Cek Slot Penumpang Biasa
+                    then penumpangBiasa->exist(p) and result = true
+                else result = false
+                endif
+            else
+                if penumpangBiasa->size() < 4 -- Cek Slot Penumpang Biasa
+                then penumpangBiasa->exist(p) and result = true
+                else result = false
+            endif
+
+context Bus::turunkanPenumpang(nama: String): Boolean
+    init : false
+    inv  : penumpangBiasa->size() + penumpangPrioritas->size() <= 6
+    pre  : penumpangBiasa->exist(nama) or penumpangPrioritas->exist(nama)
+    post : if penumpangBiasa@pre->size() - penumpangBiasa->size() = 1 -- Apakah ada pengurangan penumpang di salah satu Array
+                or penumpangPrioritas@pre->size() - penumpangPrioritas->size() = 1
+            then result = true
+            else result = false
+            endif
+
+    
