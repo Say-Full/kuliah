@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <!-- Bootstrap v4.6.2 -->
+    <!-- Boleh hapus bagian integrity dan crossorigin -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css">
+    
+    <title>Dynamic Form</title>
+</head>
+<body class="bg-dark">
+    <div class="container">
+        <div class="row my-4">
+            <div class="col-lg-10 mx-auto">
+                <div class="card shadow">
+                    <div class="card-header">
+                        <h4 class="text-center">Dynamic Items</h4>
+                    </div>
+                    <div class="card-body p-4">
+
+                        <!-- Untuk menampilkan pesan berhasil menambahkan data ke database -->
+                        <div id="show_alert"></div>
+                        
+                        <!-- Pengiriman data akan ditangani oleh ajax sehingga action="#" atau kosongkan -->
+                        <!-- id form dibutuhkan untuk mengirimkan semua data menggunakan ajax -->
+                        <!-- id form juga dibutuhkan di dalam ajax untuk mengosongkan isi form dan elemen form yang ditambah secara dimamis jika berhasil -->
+                        <form method="POST" id="dynamic_form">
+
+                            <!-- id div ini digunakan untuk menambahkan isinya secara dinamis -->
+                            <div id="show_item">
+                                <div class="row">
+                                    <div class="col-md-4 mb-3">
+                                        <!-- Store multiple product in the same attribute -->
+                                        <!-- Karena form bersifat dinamis, data setiap inputnya ditampung ke dalam array, lalu diserialisasi oleh ajax untuk dikirim ke backend, dan di-trace satu per satu untuk disimpan ke dalam database -->
+                                        <!-- Jika tidak diisi maka input bertipe text akan bernilai string kosong ('') dan yang bertipe number bernilai 0 sehingga perlu ditambahkan atribut required -->
+                                        <input type="text" name="product_name[]" class="form-control" placeholder="Nama produk" required>
+                                    </div>
+                                    <div class="col-md-3 mb-3">
+                                        <input type="number" name="product_price[]" class="form-control" placeholder="Harga produk" required>
+                                    </div>
+                                    <div class="col-md-3 mb-3">
+                                        <input type="number" name="product_quantity[]" class="form-control" placeholder="Jumlah produk" required>
+                                    </div>
+
+                                    <div class="col-md-2 mb-3 d-grid">
+                                        <!-- id add_item_btn digunakan untuk ditangkap oleh ajax yang berguna untuk menambahkan elemen form -->
+                                        <button class="btn btn-success" id="add_item_btn">+</button>
+                                    </div>
+                                </div>
+                            </div>
+                            <div>
+                                <!-- Tombol untuk memproses form -->
+                                <!-- <button type="submit" class="btn btn-primary w-25" style="float: right;">Submit</button> -->
+                                <!-- <button type="submit" class="btn btn-primary w-25 d-block mr-0 ml-auto">Submit</button> -->
+                                <button type="submit" class="btn btn-primary w-25 float-right">Submit</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+
+    <!-- File jQuery milik pribadi yang telah disimpan di direktori yang sama dan file-nya bernama jquery-3.6.0.min.js -->
+    <script src="jquery-3.6.0.min.js"></script>
+
+    <!-- Bootstrap v4.6.2 -->
+    <!-- Boleh hapus bagian integrity dan crossorigin -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/js/bootstrap.bundle.min.js"></script>
+    
+    <script>
+        $(document).ready(function() {
+            // alert('Yo!'); // menguji apakah bisa menjalankan script ajax
+
+            // Tombol tambah item di dalam form
+            // Elemen form yang baru ditambahkan menggunakan class appended_item agar ketika form berhasil dikirim, semua elemen form yang ditambahkan dihapus sehingga menyisakan satu elemen form yang asli
+            // Tombol tambah elemen form diubah menjadi tombol menghapus elemen form, class (btn-danger dan remove_item_btn) dan simbol tombolnya diubah
+            $("#add_item_btn").click(function(e) {
+                e.preventDefault(); // prevent the page refresh
+                $("#show_item").append(
+                    `
+                        <div class="row appended_item">
+                            <div class="col-md-4 mb-3">
+                                <input type="text" name="product_name[]" class="form-control" placeholder="Item Name" required>
+                            </div>
+                            <div class="col-md-3 mb-3">
+                                <input type="number" name="product_price[]" class="form-control" placeholder="Item Price" required>
+                            </div>
+                            <div class="col-md-3 mb-3">
+                                <input type="number" name="product_quantity[]" class="form-control" placeholder="Item Quantity" required>
+                            </div>
+
+                            <div class="col-md-2 mb-3 d-grid">
+                                <button class="btn btn-danger remove_item_btn">-</button>
+                            </div>
+                        </div>
+                    `
+                );
+            });
+
+            // Tombol hapus item di dalam form
+            // Tombol hapus hanya dimiliki oleh elemen form yang ditambahkan
+            $(document).on('click', '.remove_item_btn', function(e) {
+                e.preventDefault();
+                let row_item = $(this).parent().parent();
+                $(row_item).remove();
+            });
+
+            // Kirim semua data dari form dengan id=dynamic_form menggunakan Ajax
+            $("#dynamic_form").submit(function(e) {
+                e.preventDefault();
+                $.ajax({
+                    url: 'aksi.php', // Script backend untuk menangani data dan menyimpannya ke dalam database
+                    method: 'post', // Metode untuk mengirimkan data
+                    data: $(this).serialize(), // Menyatukan semua data form untuk dikirmkan ke backend
+                    success: function(response) {
+                        // console.log(response); // untuk debugging menggunakan print_r(); di aksi.php
+                        $("#dynamic_form")[0].reset(); // Mengosongkan semua isi form
+                        $(".appended_item").remove(); // Menghapus semua elemen form yang ditambahkan
+                        $("#show_alert").html(
+                            `
+                                <div class="alert alert-success alert-dismissible">
+                                    <strong>${response}<strong>
+                                    <button type="button" class="close" data-dismiss="alert">
+                                        <span>&times;</span>
+                                    </button>
+                                </div>
+                            `
+                        ); // Memberikan pesan pemberitahuan bahwa data berhasil diproses oleh backend
+                    }
+                });
+            });
+        });
+    </script>
+</body>
+</html>
